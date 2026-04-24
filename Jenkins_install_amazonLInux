@@ -18,3 +18,10 @@ sudo systemctl start jenkins
 sudo systemctl daemon-reload
 sudo systemctl reset-failed jenkins
 sudo systemctl start jenkins
+
+
+
+Terraform installation:
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo dnf install -y terraform
