@@ -28,6 +28,8 @@ sudo dnf install docker -y
 sudo systemctl start docker
 sudo systemctl enable docker
 ----------------------------
+Other softwares:
+sudo dnf install maven tree git -y
 
 Temp folder issue fix:
 # 1. Create the override directory
