@@ -1,51 +1,68 @@
-## Jenkins Slave (Agent) Integration Guide
-This project outlines the architectural setup for a Distributed Jenkins Environment. By offloading build tasks to a dedicated Slave (Agent), we preserve the resources of the 4GB RAM Master, ensuring the Jenkins UI and orchestration remain responsive.
+# 🛠️ Jenkins Agent (Slave) Integration Guide
+This guide details the architectural setup for a Distributed Jenkins Environment. By offloading heavy build tasks to a dedicated Slave, we protect the 4GB Master Node from crashing, ensuring the UI and orchestration remain stable.
 
-### 🏗 Architecture Overview
-Jenkins Master: Orchestration, UI, and Credential Management.
+## 🏗️ Architecture at a Glance
+Jenkins Master: Handles Orchestration, UI, and Security.
 
-Jenkins Slave (172.31.47.211): Executes Maven builds, Unit Tests, and Java compilations.
+Jenkins Slave (172.31.47.211): Handles Maven builds and Java compilation.
 
-Communication: Secured via SSH Key-based authentication.
+Protocol: Secured via SSH (RSA 4096-bit) key-based authentication.
 
-### 📂 Setup Phases
-Phase 1: Key Generation (Master Node)
-Generate the identity for the jenkins user on the Master.
+## 📂 Setup Phases
+### Phase 1: Key Generation (Master Node)
+Log into your Master instance as the jenkins user to create the "ID card" for the agent.
 
-Log into Master as jenkins.
+Generate the PEM Key:
 
-Execute:
+Bash
 
 ssh-keygen -t rsa -b 4096 -m PEM -f ~/.ssh/id_rsa_jenkins -N ""
-Copy the public key: cat ~/.ssh/id_rsa_jenkins.pub.
+Capture the Public Key:
 
-Phase 2: Agent Preparation (Slave Node)
-Prepare the remote environment to host the Jenkins agent process.
+Bash
 
-User Setup:
+cat ~/.ssh/id_rsa_jenkins.pub
+Copy the entire string (starting with ssh-rsa) to your clipboard.
+
+### Phase 2: Agent Preparation (Slave Node)
+Log into your Slave instance (172.31.47.211) to prepare the environment.
+
+User & SSH Setup:
+
+Bash
 
 sudo useradd -m jenkins
 sudo su - jenkins
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
-echo "PASTE_YOUR_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
+echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
-Dependencies: Install Java (required for the agent .jar) and Maven.
+Install Toolchain:
 
 Bash
 
 sudo dnf install java-21-amazon-corretto-devel maven -y
-Phase 3: Jenkins UI Configuration
-Credentials: Add the Private Key (~/.ssh/id_rsa_jenkins) as an SSH Username with private key credential named slave-ssh-key.
+### Phase 3: Jenkins UI Configuration (Web Dashboard)
+Add Credentials: Manage Jenkins > Credentials > Global > Add Credentials
 
-Node Setup: Create Slave-01 as a Permanent Agent.
+Kind: SSH Username with private key
 
-Remote root: /home/jenkins
+ID: slave-ssh-key
 
-Launch method: Launch agents via SSH.
+Private Key: Paste the content of ~/.ssh/id_rsa_jenkins (from the Master).
 
-Host Key Verification: Non-verifying Verification Strategy.
+Create the Node: Manage Jenkins > Nodes > New Node
 
-Threshold Optimization (SRE Best Practice): > Crucial: In the "Configure Monitors" section, adjust Free Disk Space and Free Temp Space thresholds from 1GiB to 200MiB. This prevents the agent from going offline on smaller t2.micro instances.
+Name: Slave-01 | Remote root: /home/jenkins
+
+Launch Method: Launch agents via SSH
+
+Host: 172.31.47.211 | Credentials: slave-ssh-key
+
+Verification: Non-verifying Verification Strategy.
+
+SRE Optimization (Crucial for T2.Micro): Go to Nodes > Configure Monitors.
+
+Change Free Disk Space and Free Temp Space thresholds from 1GiB to 200MiB.
 
 ### 🚀 Validation Pipeline
 Use the following declarative pipeline to verify that the Slave is correctly assuming the build workload.
