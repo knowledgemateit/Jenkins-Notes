@@ -1,7 +1,9 @@
 # 🛠️ Jenkins Agent (Slave) Integration Guide
+
 This guide details the architectural setup for a Distributed Jenkins Environment. By offloading heavy build tasks to a dedicated Slave, we protect the 4GB Master Node from crashing, ensuring the UI and orchestration remain stable.
 
 ## 🏗️ Architecture at a Glance
+
 Jenkins Master: Handles Orchestration, UI, and Security.
 
 Jenkins Slave (172.31.47.211): Dedicated execution environment for Maven builds and Java compilation.
@@ -9,7 +11,9 @@ Jenkins Slave (172.31.47.211): Dedicated execution environment for Maven builds 
 Protocol: Secured via SSH (RSA 4096-bit) key-based authentication.
 
 ## 📂 Setup Phases
+
 ### Phase 1: Key Generation (Master Node)
+
 Log into your Master instance as the jenkins user to create the "Identity" for the agent connection.
 
 Generate the PEM Key:
@@ -17,14 +21,17 @@ Generate the PEM Key:
 Bash
 
 ssh-keygen -t rsa -b 4096 -m PEM -f ~/.ssh/id_rsa_jenkins -N ""
+
 Capture the Public Key:
 
 Bash
 
 cat ~/.ssh/id_rsa_jenkins.pub
+
 Copy the entire string (starting with ssh-rsa) to your clipboard.
 
 ### Phase 2: Agent Preparation (Slave Node)
+
 Log into your Slave instance (172.31.47.211) to prepare the environment for work.
 
 User & SSH Configuration:
@@ -32,16 +39,23 @@ User & SSH Configuration:
 Bash
 
 sudo useradd -m jenkins
+
 sudo su - jenkins
+
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
+
 echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
+
 chmod 600 ~/.ssh/authorized_keys
+
 Install the Toolchain:
 
 Bash
 
 sudo dnf install java-21-amazon-corretto-devel maven -y
+
 ### Phase 3: Jenkins UI Configuration (Web Dashboard)
+
 Add Credentials: Manage Jenkins > Credentials > Global > Add Credentials
 
 Kind: SSH Username with private key
