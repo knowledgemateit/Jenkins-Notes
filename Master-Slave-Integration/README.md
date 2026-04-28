@@ -36,7 +36,7 @@ Log into your Slave instance (172.31.47.211) to prepare the environment for work
 
 User & SSH Configuration:
 
-Bash
+sudo dnf install java-21-amazon-corretto-devel maven -y
 
 sudo useradd -m jenkins
 
@@ -48,11 +48,8 @@ echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
 
 chmod 600 ~/.ssh/authorized_keys
 
-Install the Toolchain:
+JVM settings: -Xms256m -Xmx512m -XX:+UseG1GC -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true
 
-Bash
-
-sudo dnf install java-21-amazon-corretto-devel maven -y
 
 ### Phase 3: Jenkins UI Configuration (Web Dashboard)
 
