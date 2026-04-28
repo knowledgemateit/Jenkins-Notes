@@ -48,7 +48,7 @@ echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
 
 chmod 600 ~/.ssh/authorized_keys
 
-JVM settings: -Xms256m -Xmx512m -XX:+UseG1GC -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true
+JVM settings: -Djava.io.tmpdir=/home/jenkins/tmp
 
 
 ### Phase 3: Jenkins UI Configuration (Web Dashboard)
