@@ -74,3 +74,8 @@ uat  - second  Build after other projects are built  -> Projects to watch   (dev
                Build other projects   ->  Projects to build (prod)
 prod - thrid
 
+
+
+GitHub hook trigger for GITScm polling
+http://54.83.98.157:8090/github-webhook/
+Content type application/json
