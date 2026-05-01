@@ -51,5 +51,26 @@ sudo systemctl daemon-reload
 sudo systemctl restart jenkins
 
 ----------------------------------
+role based :
+Overall	
+Credentials	
+Agent	
+Job	
+Run	
+View	
+SCM	
+Metrics	
 
+
+curl -u admin:11bb6ef80eb6e96779b6317c008b66e1cc http://54.83.98.157:8090/job/first_job/build?token=11bb6ef80eb6e96779b6317c008b66e1cc
+
+
+
+
+upstream and downstream
+
+dev  - first 
+uat  - second  Build after other projects are built  -> Projects to watch   (dev)
+               Build other projects   ->  Projects to build (prod)
+prod - thrid
 
