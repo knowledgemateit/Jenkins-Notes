@@ -79,3 +79,32 @@ prod - thrid
 GitHub hook trigger for GITScm polling
 http://54.83.98.157:8090/github-webhook/
 Content type application/json
+
+
+Declarative:
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+
+
+Scripted: Groovy
+node {
+    stage('Build') {
+        echo 'Building...'
+    }
+    stage('Test') {
+        try {
+            echo 'Testing...'
+        } catch (exc) {
+            echo 'Failed!'
+        }
+    }
+}
